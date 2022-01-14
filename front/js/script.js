@@ -1,4 +1,4 @@
-function addElements(tab, num) { // Fonction-ajout des cartes produits
+async function addElements(tab, num) { // Fonction-ajout des cartes produits
 
 // Création des éléments vides et des attributs
     var prodSection = document.getElementById("items")
@@ -8,6 +8,7 @@ function addElements(tab, num) { // Fonction-ajout des cartes produits
     var newTitle = document.createElement("h3")
     var newParagraph = document.createElement("p")
 
+// Création des id pour les éléments
     newLink.setAttribute("id", "link" + num)
     newImage.setAttribute("id", "img" + num)
     newTitle.setAttribute("id", "productName" + num)
@@ -21,10 +22,10 @@ function addElements(tab, num) { // Fonction-ajout des cartes produits
     newArticle.appendChild(newParagraph)
         
 // Intégration des produits aux éléments
-    addProducts(tab, num)
+    await addProducts(tab, num)
 }
 
-function addProducts(tab, num) { // Fonction-ajout des produits
+async function addProducts(tab, num) { // Fonction-ajout des produits
     document
         .getElementById("link" + num)
         .setAttribute("href", "../html/product.html?_id=" + tab[num]._id)
@@ -42,14 +43,15 @@ function addProducts(tab, num) { // Fonction-ajout des produits
         .innerText = tab[num].description
     }
     
-function getProducts() { // Ajout des produits
-    fetch("http://localhost:3000/api/products")
+async function getProducts() { // Ajout des produits
+    await fetch("http://localhost:3000/api/products")
         .then(function(res) { // Récupération des données de l'API
             if(res.ok) {
                 return res.json()
         }
         })
         .then(function(products) { // Boucle pour l'intégration des données
+            console.table(products)
             var nbProducts=products.length
             for(var i = 0; i < nbProducts; i++) {
                 addElements(products, i)
