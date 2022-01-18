@@ -28,7 +28,7 @@ async function addElements(tab, num) { // Fonction-ajout des cartes produits
 async function addProducts(tab, num) { // Fonction-ajout des produits
     document
         .getElementById("link" + num)
-        .setAttribute("href", "../html/product.html?_id=" + tab[num]._id)
+        .setAttribute("href", "../html/product.html?_id=" + tab[num]._id + "&_name=" + tab[num].name)
     document
         .getElementById("img" + num)
         .setAttribute("src", tab[num].imageUrl)
