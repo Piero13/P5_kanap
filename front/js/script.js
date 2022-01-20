@@ -1,20 +1,23 @@
 async function addElements(tab, num) { // Fonction-ajout des cartes produits
 
-// Création des éléments vides et des attributs
-    var prodSection = document.getElementById("items")
-    var newLink = document.createElement("a")
-    var newArticle = document.createElement("article")
-    var newImage = document.createElement("img")
-    var newTitle = document.createElement("h3")
-    var newParagraph = document.createElement("p")
-
-// Création des id pour les éléments
-    newLink.setAttribute("id", "link" + num)
-    newImage.setAttribute("id", "img" + num)
-    newTitle.setAttribute("id", "productName" + num)
-    newParagraph.setAttribute("id", "productDescription" + num)
+// Création des éléments vides et des id
     
+    let newLink = document.createElement("a")
+    newLink.setAttribute("id", "link" + num)
+
+    let newArticle = document.createElement("article")
+
+    let newImage = document.createElement("img")
+    newImage.setAttribute("id", "img" + num)
+
+    let newTitle = document.createElement("h3")
+    newTitle.setAttribute("id", "productName" + num)
+
+    let newParagraph = document.createElement("p")
+    newParagraph.setAttribute("id", "productDescription" + num)
+
 // Intégration des éléments vides à la page
+    let prodSection = document.getElementById("items")
     prodSection.appendChild(newLink)
     newLink.appendChild(newArticle)
     newArticle.appendChild(newImage)

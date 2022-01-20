@@ -16,17 +16,17 @@ document.title = urlName + " | Page produit";
 async function addElements(tab) { // Fonction création des éléments HTML
 
 // Création des éléments vides et des attributs
-    var divImage = document.querySelector("div.item__img");
-    var newImage = document.createElement("img");
-    var colorsSelect = document.getElementById("colors");
+    let divImage = document.querySelector("div.item__img");
+    let newImage = document.createElement("img");
+    let colorsSelect = document.getElementById("colors");
 
  
 // Création des id & intégration des éléments vides à la page
     newImage.setAttribute("id", "productImg");
     divImage.appendChild(newImage);
 
-    for(var i = 0; i < tab.colors.length; i++) { // Création et intégration du choix des couleurs
-        var newOption = document.createElement("option");
+    for(let i = 0; i < tab.colors.length; i++) { // Création et intégration du choix des couleurs
+        let newOption = document.createElement("option");
         
         colorsSelect.appendChild(newOption);
         newOption.setAttribute("id", "color" + i );
@@ -37,7 +37,7 @@ async function addElements(tab) { // Fonction création des éléments HTML
 }
 
 async function addProduct(tab) { // Fonction préparation de l'ajout des détails du produit
-    var colors = tab.colors;
+    let colors = tab.colors;
     console.table(colors);
 
     document
@@ -55,7 +55,7 @@ async function addProduct(tab) { // Fonction préparation de l'ajout des détail
     document
         .getElementById("description")
         .innerText = tab.description;
-    for(var i = 0; i < colors.length; i++) {
+    for(let i = 0; i < colors.length; i++) {
         document
             .getElementById("color" + i)
             .innerText = colors[i];
@@ -137,8 +137,7 @@ function getForCart() { //Fonction récupération des options du produit
         let infoProduct = {
             productId: urlProductId,
             productColor: prodColor.value,
-            productQty: Number(prodQty.value),
-            productName: artName.textContent
+            productQty: Number(prodQty.value)
         }
         console.table(infoProduct);
 
