@@ -1,18 +1,9 @@
-document.title = "Kanap | Panier"
-
-
-/*Initialisation des variables*/
+// Changement du titre de la page
+document.title = "Kanap | Panier";
 
 // Récupération des données du localStorage
 const cartProducts = JSON.parse(localStorage.getItem("cart"));
 console.table(cartProducts);
-
-// Récupération de la section "cart__items" pour intégration des éléments
-const cartItemSection = document.getElementById("cart__items");
-
-// Récupération des éléments total articles et prix total
-const cartTotalQty = document.getElementById("totalQuantity");
-const cartTotalPrice = document.getElementById("totalPrice");
 
 // Initialisation des tableaux et variables
 let cartProductOptions = [];
@@ -22,13 +13,17 @@ let totalQty = 0;
 
 
 /*Fonction ajout des éléments HTML pour le récapitulatif du panier*/
-function addCartElements(productQuantity) {
+function addCartElements(idProduct, productQuantity, colorProduct) {
 
+    // Récupération de la section "cart__items" pour intégration des éléments
+    const cartItemSection = document.getElementById("cart__items");
+
+    // Ajout des éléments
     let article = document.createElement("article");
     cartItemSection.appendChild(article);
     article.className = "cart__item";
-    article.setAttribute("data-id", cartProductOptions.prodId);
-    article.setAttribute("data-color", cartProductOptions.prodColor);
+    article.setAttribute("data-id", idProduct);
+    article.setAttribute("data-color", colorProduct);
 
     let divImg = document.createElement("div");
     article.appendChild(divImg);
@@ -53,7 +48,7 @@ function addCartElements(productQuantity) {
        
     let itemColor = document.createElement("p");
     divContentDescription.appendChild(itemColor);
-    itemColor.innerText = cartProductOptions.prodColor;
+    itemColor.innerText = colorProduct;
     
     let itemPrice = document.createElement("p");
     divContentDescription.appendChild(itemPrice);
@@ -93,18 +88,49 @@ function addCartElements(productQuantity) {
 
 /*Fonction calcul du nombre total d'articles du panier*/
 function addTotalQty(productQuantity) {
+    const cartTotalQty = document.getElementById("totalQuantity");
     totalQty = totalQty + productQuantity;
     cartTotalQty.innerText = totalQty;
-    console.log("Total quantity = " + totalQty);
 }
 
 
 /*Fonction calcul du montant total du panier*/
 function addTotalPrice(productQuantity) {
-    totalProdPrice = addedProductOptions.prodPrice * productQuantity;
+    const cartTotalPrice = document.getElementById("totalPrice");
+    let totalProdPrice = addedProductOptions.prodPrice * productQuantity;
     totalPrice = totalPrice + totalProdPrice;
     cartTotalPrice.innerText = totalPrice;
-    console.log(totalPrice);
+}
+
+/*Fonction modification des quantités du panier*/
+function qtyModify() {
+    const getElementsToModify = document.getElementsByClassName("itemQuantity");
+    console.log(getElementsToModify);
+    const elementsToModify = Array.from(getElementsToModify);
+    console.log(elementsToModify)
+
+    for(let j = 0; j < elementsToModify.length; j++) {
+
+        elementsToModify[j].addEventListener("change", function(event) {
+            event.preventDefault();
+
+            let newQty = parseInt(elementsToModify[j].value);
+            console.log(newQty)
+
+            cartProducts[j].productQty = newQty;
+            console.log(cartProducts)
+
+            localStorage.setItem("cart", JSON.stringify(cartProducts));
+
+            location.reload();
+        })
+    }
+}
+
+
+/*Fonction suppression d'un produit du panier*/
+function productDelete() {
+
 }
 
 
@@ -116,22 +142,12 @@ if(cartProducts === null) {
 
     // Pour chaque produit dans le panier
     for(i = 0; i < cartProducts.length; i++) { 
-        
-        // Récupération des options contenues dans le localStorage
-        cartProductOptions = {
-            prodId: cartProducts[i].productId,
-            prodColor: cartProducts[i].productColor,
-            prodQty: cartProducts[i].productQty
-        }
-        console.table(cartProductOptions);
+        let idProduct = cartProducts[i].productId;
+        let colorProduct = cartProducts[i].productColor;
+        let productQuantity = cartProducts[i].productQty;
 
-        let productQuantity= cartProductOptions.prodQty;
-
-        // Calcul et ajout de la quantité totale d'articles du panier
-        addTotalQty(productQuantity);
-    
         // Récupération des options complémentaires contenues dans l'API
-        fetch("http://localhost:3000/api/products/" + cartProductOptions.prodId)
+        fetch("http://localhost:3000/api/products/" + idProduct)
         .then(function(res) { // Récupération des données de l'API
             if(res.ok) {
             return res.json();
@@ -146,12 +162,17 @@ if(cartProducts === null) {
             }
             console.table(addedProductOptions);
 
+            // Ajout et remplissage des éléments HTML
+            addCartElements(idProduct, productQuantity, colorProduct);
+
+            // Calcul et ajout de la quantité totale d'articles du panier
+            addTotalQty(productQuantity);
+
             // Calcul et ajout du montant total du panier
             addTotalPrice(productQuantity);
 
-            // Ajout et remplissage des éléments HTML
-            addCartElements(productQuantity);
-
+            // Modification de la quantité d'un produit
+            qtyModify();
         })
         .catch(function(error) { // En cas d'erreur de la requête
             console.log("Erreur : " + error);
