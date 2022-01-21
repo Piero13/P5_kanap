@@ -1,7 +1,7 @@
-async function addElements(tab, num) { // Fonction-ajout des cartes produits
+/*Fonction-ajout des cartes produits*/
+async function addElements(tab, num) {
 
-// Création des éléments vides et des id
-    
+    // Création des éléments vides et des id
     let newLink = document.createElement("a");
     newLink.setAttribute("id", "link" + num);
 
@@ -16,7 +16,7 @@ async function addElements(tab, num) { // Fonction-ajout des cartes produits
     let newParagraph = document.createElement("p");
     newParagraph.setAttribute("id", "productDescription" + num);
 
-// Intégration des éléments vides à la page
+    // Intégration des éléments vides à la page
     let prodSection = document.getElementById("items");
     prodSection.appendChild(newLink);
     newLink.appendChild(newArticle);
@@ -24,11 +24,13 @@ async function addElements(tab, num) { // Fonction-ajout des cartes produits
     newArticle.appendChild(newTitle);
     newArticle.appendChild(newParagraph);
         
-// Intégration des produits aux éléments
+    // Intégration des produits aux éléments
     await addProducts(tab, num)
 }
 
-async function addProducts(tab, num) { // Fonction-ajout des produits
+
+/*Fonction ajout des produits*/
+async function addProducts(tab, num) {
     document
         .getElementById("link" + num)
         .setAttribute("href", "../html/product.html?_id=" + tab[num]._id + "&_name=" + tab[num].name);
@@ -43,25 +45,27 @@ async function addProducts(tab, num) { // Fonction-ajout des produits
         .innerText = tab[num].name;
     document
         .getElementById("productDescription" + num)
-        .innerText = tab[num].description;
+        .innerText = tab[num].description
     }
-    
-async function getProducts() { // Ajout des produits
+
+
+/*Récupération des données & Ajout des produits*/
+async function getProducts() {
     await fetch("http://localhost:3000/api/products")
         .then(function(res) { // Récupération des données de l'API
             if(res.ok) {
-                return res.json();
+                return res.json()
         }
         })
         .then(function(products) { // Boucle pour l'intégration des données
             console.table(products);
             var nbProducts=products.length;
             for(var i = 0; i < nbProducts; i++) {
-                addElements(products, i);
+                addElements(products, i)
             }
         })
         .catch(function(error) {
-            console.log("Erreur : ", error);
+            console.log("Erreur : ", error)
         })
 }    
 
