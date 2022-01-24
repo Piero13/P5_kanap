@@ -25,7 +25,7 @@ async function addElements(tab, num) {
     newArticle.appendChild(newParagraph);
         
     // Intégration des produits aux éléments
-    await addProducts(tab, num)
+    await addProducts(tab, num);
 }
 
 
@@ -45,7 +45,7 @@ async function addProducts(tab, num) {
         .innerText = tab[num].name;
     document
         .getElementById("productDescription" + num)
-        .innerText = tab[num].description
+        .innerText = tab[num].description;
     }
 
 
@@ -54,19 +54,19 @@ async function getProducts() {
     await fetch("http://localhost:3000/api/products")
         .then(function(res) { // Récupération des données de l'API
             if(res.ok) {
-                return res.json()
+                return res.json();
         }
         })
         .then(function(products) { // Boucle pour l'intégration des données
             console.table(products);
             var nbProducts=products.length;
             for(var i = 0; i < nbProducts; i++) {
-                addElements(products, i)
+                addElements(products, i);
             }
         })
         .catch(function(error) {
-            console.log("Erreur : ", error)
+            console.log("Erreur : ", error);
         })
 }    
 
-getProducts()
+getProducts();

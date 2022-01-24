@@ -234,6 +234,8 @@ const addressInput = document.getElementById("address");
 const cityInput = document.getElementById("city");
 const emailInput = document.getElementById("email");
 
+const btnCommand = document.getElementById("order");
+
 /*Expressions régulières*/
 class Regex {
 
@@ -310,8 +312,34 @@ function formValidation() {
 			emailInput.nextElementSibling.innerText = "";
 		}
 	})
-
+    console.log(validForm)
 	return validForm;
 }
 
-formValidation()
+/*Validation au clic sur le bouton commander*/
+btnCommand.addEventListener('click', function(event) {
+    event.preventDefault();
+
+    if(formValidation()) {
+        // Récupération des id des produits du panier
+        let idproductsOrder = [];
+        for(i = 0; i < cartProducts.length; i++) {
+            idproductsOrder.push(cartProducts[i]);
+        }
+
+        // Création du tableau récapitulatif de commande
+        let cartOrder = {
+            contact: {
+                prénom: firstNameInput.value,
+                nom: lastNameInput.value,
+                adresse: addressInput.value,
+                ville: cityInput.value,
+                email: emailInput.value
+            },
+            produits: {
+                idproductsOrder
+            }
+        }
+        console.table(cartOrder);
+    }
+})
