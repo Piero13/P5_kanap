@@ -1,5 +1,3 @@
-// Déclaration des variables
-
 const urlString = window.location.href;
 const url = new URL(urlString);
 const urlProductId = url.searchParams.get("_id");
@@ -7,6 +5,7 @@ const urlName = url.searchParams.get("_name");
 
 console.log(urlProductId);
 console.log(urlName);
+
 
 /*******************************************************/
 /*Affichage de la page produit de l'article sélectionné*/
@@ -60,7 +59,7 @@ async function addProduct(tab) {
     document
         .getElementById("description")
         .innerText = tab.description;
-        
+
     for(let i = 0; i < colors.length; i++) {
         document
             .getElementById("color" + i)

@@ -1,6 +1,3 @@
-// Changement du titre de la page
-document.title = "Kanap | Panier";
-
 // Récupération des données du localStorage
 let cartProducts = JSON.parse(localStorage.getItem("cart"));
 console.table(cartProducts);
@@ -10,6 +7,14 @@ let cartProductOptions = [];
 let addedProductOptions = [];
 let totalPrice = 0;
 let totalQty = 0;
+
+
+/**************************************************************/
+/*Affichage du panier et fonctions de modification/suppression*/
+/**************************************************************/
+
+// Changement du titre de la page
+document.title = "Kanap | Panier";
 
 
 /*Fonction ajout des éléments HTML pour le récapitulatif du panier*/
@@ -82,7 +87,7 @@ function addCartElements(idProduct, productQuantity, colorProduct) {
     let deleteOption = document.createElement("p");
     divDelete.appendChild(deleteOption);
     deleteOption.className = "deleteItem";
-    deleteOption.innerText = "Supprimer"
+    deleteOption.innerText = "Supprimer";
 }
 
 
@@ -91,7 +96,7 @@ function addTotalQty(productQuantity) {
     const cartTotalQty = document.getElementById("totalQuantity");
 
     totalQty = totalQty + productQuantity;
-    cartTotalQty.innerText = totalQty
+    cartTotalQty.innerText = totalQty;
 }
 
 
@@ -101,7 +106,7 @@ function addTotalPrice(productQuantity) {
     let totalProdPrice = addedProductOptions.prodPrice * productQuantity;
 
     totalPrice = totalPrice + totalProdPrice;
-    cartTotalPrice.innerText = totalPrice
+    cartTotalPrice.innerText = totalPrice;
 }
 
 
@@ -125,7 +130,7 @@ function qtyModify() {
 
             localStorage.setItem("cart", JSON.stringify(cartProducts));
 
-            location.reload()
+            location.reload();
         })
     }
 }
@@ -135,7 +140,7 @@ function qtyModify() {
 function productDelete() {
     const getElementsToDelete = document.getElementsByClassName("deleteItem");
     console.log(getElementsToDelete);
-    
+
     const elementsToDelete = Array.from(getElementsToDelete);
     console.log(elementsToDelete);
 
@@ -157,10 +162,10 @@ function productDelete() {
                     console.log(cartProducts);
                     localStorage.setItem("cart", JSON.stringify(cartProducts));
 
-                    break
+                    break;
                 }         
             }
-            location.reload()
+            location.reload();
         })
     })
 }
@@ -168,10 +173,11 @@ function productDelete() {
 
 /*Récupération et ajout des produits du panier*/
 if(cartProducts === null || cartProducts == "") {
-    document.getElementById("cart__items").innerText = "Votre panier est vide !"
+    document.getElementById("cart__items").innerText = "Votre panier est vide !";
+    document.getElementById("totalQuantity").innerText = 0;
+    document.getElementById("totalPrice").innerText = 0;
 
 } else{
-
     // Pour chaque produit dans le panier
     for(i = 0; i < cartProducts.length; i++) { 
         let idProduct = cartProducts[i].productId;
@@ -182,7 +188,7 @@ if(cartProducts === null || cartProducts == "") {
         fetch("http://localhost:3000/api/products/" + idProduct)
         .then(function(res) { // Récupération des données de l'API
             if(res.ok) {
-            return res.json()
+            return res.json();
         }
         })
 
@@ -208,11 +214,104 @@ if(cartProducts === null || cartProducts == "") {
             qtyModify();
 
             // Suppression du produit séjectionné
-            productDelete()
+            productDelete();
         })
 
         .catch(function(error) { // En cas d'erreur renvoyée par Fetch
-            console.log("Erreur : " + error)
+            console.log("Erreur : " + error);
         })
     }
 }
+
+
+/***************************/
+/*Validation de la commande*/
+/***************************/
+
+const firstNameInput = document.getElementById("firstName");
+const lastNameInput = document.getElementById("lastName");
+const addressInput = document.getElementById("address");
+const cityInput = document.getElementById("city");
+const emailInput = document.getElementById("email");
+
+/*Expressions régulières*/
+class Regex {
+
+	// Test d'un texte autre que l'adresse ou l'email
+	static textValidation(valueToTest) {
+		const nameRegex = new RegExp("^[a-z]+[\- ']?[a-z]*[\- ']?[a-z]*[\- ']?[a-z]*$", "i");
+		return nameRegex.test(valueToTest);
+	}
+
+	// Test de l'adresse
+	static addressValidation(valueToTest) {
+		const addressRegex = new RegExp("^[a-z0-9\- ']{5,}$", "i");
+		return addressRegex.test(valueToTest);
+	}
+
+	// Test de l'email
+	static emailValidation(valueToTest) {
+		const emailRegex = new RegExp("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$", "i");
+		return emailRegex.test(valueToTest);
+	}
+}
+
+
+/*Fonction de vérification du formulaire*/
+function formValidation() {
+	let validForm = true;
+
+	// Vérification du prénom
+    firstNameInput.addEventListener('change', function() {
+	    if(!Regex.textValidation(firstNameInput.value)) {
+		    firstNameInput.nextElementSibling.innerText = "Prénom invalide";
+		    validForm = false;
+	    } else {
+		    firstNameInput.nextElementSibling.innerText = "";
+	    }
+    })
+
+	// Vérification du nom
+	lastNameInput.addEventListener('change', function() {
+	    if(!Regex.textValidation(lastNameInput.value)) {
+		    lastNameInput.nextElementSibling.innerText = "Nom invalide";
+		    validForm = false;
+	    } else {
+		    lastNameInput.nextElementSibling.innerText = "";
+	    }
+    })
+
+	// Vérification de l'adresse
+	addressInput.addEventListener('change', function() {
+	    if(!Regex.addressValidation(addressInput.value)) {
+		    addressInput.nextElementSibling.innerText = "Adresse invalide";
+		    validForm = false;
+	    } else {
+		    addressInput.nextElementSibling.innerText = "";
+	    }
+    })
+
+	// Vérification de la ville
+	cityInput.addEventListener('change', function() {
+	    if(!Regex.textValidation(cityInput.value)) {
+		    cityInput.nextElementSibling.innerText = "Ville invalide";
+		    validForm = false;
+	    } else {
+		    cityInput.nextElementSibling.innerText = "";
+	    }
+    })
+
+	// Vérification de l'email
+	emailInput.addEventListener('change', function() {
+		if(!Regex.emailValidation(emailInput.value)) {
+			emailInput.nextElementSibling.innerText = "Email invalide";
+			validForm = false;
+		} else {
+			emailInput.nextElementSibling.innerText = "";
+		}
+	})
+
+	return validForm;
+}
+
+formValidation()
