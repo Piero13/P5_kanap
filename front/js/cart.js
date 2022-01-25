@@ -234,7 +234,7 @@ const addressInput = document.getElementById("address");
 const cityInput = document.getElementById("city");
 const emailInput = document.getElementById("email");
 
-const btnCommand = document.getElementById("order");
+const btnOrder = document.getElementById("order");
 
 /*Expressions régulières*/
 class Regex {
@@ -264,82 +264,105 @@ function formValidation() {
 	let validForm = true;
 
 	// Vérification du prénom
-    firstNameInput.addEventListener('change', function() {
-	    if(!Regex.textValidation(firstNameInput.value)) {
-		    firstNameInput.nextElementSibling.innerText = "Prénom invalide";
-		    validForm = false;
-	    } else {
-		    firstNameInput.nextElementSibling.innerText = "";
-	    }
-    })
+    if(!Regex.textValidation(firstNameInput.value)) {
+		firstNameInput.nextElementSibling.innerText = "Prénom invalide";
+		validForm = false;
+	} else {
+		firstNameInput.nextElementSibling.innerText = "";
+	}
 
 	// Vérification du nom
-	lastNameInput.addEventListener('change', function() {
-	    if(!Regex.textValidation(lastNameInput.value)) {
-		    lastNameInput.nextElementSibling.innerText = "Nom invalide";
-		    validForm = false;
-	    } else {
-		    lastNameInput.nextElementSibling.innerText = "";
-	    }
-    })
+	if(!Regex.textValidation(lastNameInput.value)) {
+		lastNameInput.nextElementSibling.innerText = "Nom invalide";
+		validForm = false;
+	} else {
+		lastNameInput.nextElementSibling.innerText = "";
+	}
 
 	// Vérification de l'adresse
-	addressInput.addEventListener('change', function() {
-	    if(!Regex.addressValidation(addressInput.value)) {
-		    addressInput.nextElementSibling.innerText = "Adresse invalide";
-		    validForm = false;
-	    } else {
-		    addressInput.nextElementSibling.innerText = "";
-	    }
-    })
+	if(!Regex.addressValidation(addressInput.value)) {
+		addressInput.nextElementSibling.innerText = "Adresse invalide";
+		validForm = false;
+	} else {
+		addressInput.nextElementSibling.innerText = "";
+	}
 
 	// Vérification de la ville
-	cityInput.addEventListener('change', function() {
-	    if(!Regex.textValidation(cityInput.value)) {
-		    cityInput.nextElementSibling.innerText = "Ville invalide";
-		    validForm = false;
-	    } else {
-		    cityInput.nextElementSibling.innerText = "";
-	    }
-    })
+	if(!Regex.textValidation(cityInput.value)) {
+		cityInput.nextElementSibling.innerText = "Ville invalide";
+		validForm = false;
+	} else {
+		cityInput.nextElementSibling.innerText = "";
+	}
 
 	// Vérification de l'email
-	emailInput.addEventListener('change', function() {
-		if(!Regex.emailValidation(emailInput.value)) {
-			emailInput.nextElementSibling.innerText = "Email invalide";
-			validForm = false;
-		} else {
-			emailInput.nextElementSibling.innerText = "";
-		}
-	})
+	if(!Regex.emailValidation(emailInput.value)) {
+		emailInput.nextElementSibling.innerText = "Email invalide";
+		validForm = false;
+	} else {
+		emailInput.nextElementSibling.innerText = "";
+	}
     console.log(validForm)
+
 	return validForm;
 }
 
+
+function postOrder(postOptions) {
+
+}
+
+
 /*Validation au clic sur le bouton commander*/
-btnCommand.addEventListener('click', function(event) {
+btnOrder.addEventListener('click', function(event) {
     event.preventDefault();
 
     if(formValidation()) {
         // Récupération des id des produits du panier
         let idproductsOrder = [];
+        let orderId = "";
+
         for(i = 0; i < cartProducts.length; i++) {
-            idproductsOrder.push(cartProducts[i]);
+            idproductsOrder.push(cartProducts[i].productId);
         }
 
         // Création du tableau récapitulatif de commande
-        let cartOrder = {
+        const order = {
             contact: {
-                prénom: firstNameInput.value,
-                nom: lastNameInput.value,
-                adresse: addressInput.value,
-                ville: cityInput.value,
+                firstName: firstNameInput.value,
+                lastName: lastNameInput.value,
+                address: addressInput.value,
+                city: cityInput.value,
                 email: emailInput.value
             },
-            produits: {
-                idproductsOrder
-            }
+            products: idproductsOrder
         }
-        console.table(cartOrder);
+        
+        console.log(typeof order);
+        
+        const postOptions = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(order)
+        }
+
+        fetch("http://localhost:3000/api/products/order", postOptions)
+        .then(function(res) {
+            if(res.ok) {
+                return res.json();
+            } else {
+                console.error(res.status);
+            }
+        })
+        .then(function(resData) {
+            console.log(resData.orderId);
+            window.open("../html/confirmation.html?orderId=" + resData.orderId);
+        })
+        .catch(function(err) {
+            alert(err);
+        })
     }
 })
