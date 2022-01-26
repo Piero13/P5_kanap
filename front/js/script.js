@@ -64,7 +64,7 @@ async function getProducts() {
                 addElements(products, i);
             }
         })
-        .catch(function(error) {
+        .catch(function(error) { // Affichage si besoin du message d'erreur de la requête
             console.log("Erreur : ", error);
         })
 }    

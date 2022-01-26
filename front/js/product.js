@@ -82,8 +82,8 @@ async function getProduct() {
             addElements(searchResult);
         })
 
-        .catch(function(error) { // En cas d'erreur de la requête
-            console.log("Erreur : " + error);
+        .catch(function(err) { // En cas d'erreur de la requête
+            alert("Erreur : " + err);
         })
 }
 
@@ -106,7 +106,7 @@ function confirmation() {
         window.open("../html/cart.html", "_self");
 
     } else {
-        window.open("../html/index.html", "_self");
+        window.location.replace("../html/index.html");
     }
 }
 
@@ -157,6 +157,10 @@ function getForCart() {
     } else if(prodQty.value == 0) {
         alert("La quantité n'a pas été renseignée !");
 
+    } else if(prodQty.value > 100) {
+        alert("La quantité ne peut être comprise qu'entre 1 et 100");
+        prodQty.value = 0;
+    
     } else {
         let infoProduct = {
             productId: urlProductId,

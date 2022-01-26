@@ -95,7 +95,7 @@ function addCartElements(idProduct, productQuantity, colorProduct) {
 function addTotalQty(productQuantity) {
     const cartTotalQty = document.getElementById("totalQuantity");
 
-    totalQty = totalQty + productQuantity;
+    totalQty += productQuantity;
     cartTotalQty.innerText = totalQty;
 }
 
@@ -105,7 +105,7 @@ function addTotalPrice(productQuantity) {
     const cartTotalPrice = document.getElementById("totalPrice");
     let totalProdPrice = addedProductOptions.prodPrice * productQuantity;
 
-    totalPrice = totalPrice + totalProdPrice;
+    totalPrice += totalProdPrice;
     cartTotalPrice.innerText = totalPrice;
 }
 
@@ -177,7 +177,7 @@ if(cartProducts === null || cartProducts == "") {
     document.getElementById("totalQuantity").innerText = 0;
     document.getElementById("totalPrice").innerText = 0;
 
-} else{
+} else {
     // Pour chaque produit dans le panier
     for(i = 0; i < cartProducts.length; i++) { 
         let idProduct = cartProducts[i].productId;
@@ -233,7 +233,6 @@ const lastNameInput = document.getElementById("lastName");
 const addressInput = document.getElementById("address");
 const cityInput = document.getElementById("city");
 const emailInput = document.getElementById("email");
-
 const btnOrder = document.getElementById("order");
 
 /*Expressions régulières*/
@@ -308,11 +307,6 @@ function formValidation() {
 }
 
 
-function postOrder(postOptions) {
-
-}
-
-
 /*Validation au clic sur le bouton commander*/
 btnOrder.addEventListener('click', function(event) {
     event.preventDefault();
@@ -320,7 +314,6 @@ btnOrder.addEventListener('click', function(event) {
     if(formValidation()) {
         // Récupération des id des produits du panier
         let idproductsOrder = [];
-        let orderId = "";
 
         for(i = 0; i < cartProducts.length; i++) {
             idproductsOrder.push(cartProducts[i].productId);
@@ -340,6 +333,7 @@ btnOrder.addEventListener('click', function(event) {
         
         console.log(typeof order);
         
+        // Création des options de la requête à l'API
         const postOptions = {
             method: 'POST',
             headers: {
@@ -349,20 +343,21 @@ btnOrder.addEventListener('click', function(event) {
             body: JSON.stringify(order)
         }
 
+        // Envoi des données à l'API et récupération du numéro de commande
         fetch("http://localhost:3000/api/products/order", postOptions)
-        .then(function(res) {
+        .then(function(res) { // Récupération de la réponse de la requête
             if(res.ok) {
                 return res.json();
             } else {
                 console.error(res.status);
             }
         })
-        .then(function(resData) {
+        .then(function(resData) { // Récupération du numéro de commande et ouverture de la page confirmation
             console.log(resData.orderId);
-            window.open("../html/confirmation.html?orderId=" + resData.orderId);
+            window.location.replace("../html/confirmation.html?orderId=" + resData.orderId);
         })
-        .catch(function(err) {
-            alert(err);
+        .catch(function(err) { // Message en cas d'erreur de la requête
+            alert("Erreur : " + err);
         })
     }
 })
