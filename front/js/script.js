@@ -1,5 +1,5 @@
-/*Fonction-ajout des cartes produits*/
-async function addElements(tab, num) {
+/*Fonction ajout des cartes produits*/
+async function addElements(num) {
 
     // Création des éléments vides et des id
     let newLink = document.createElement("a");
@@ -23,9 +23,6 @@ async function addElements(tab, num) {
     newArticle.appendChild(newImage);
     newArticle.appendChild(newTitle);
     newArticle.appendChild(newParagraph);
-        
-    // Intégration des produits aux éléments
-    await addProducts(tab, num);
 }
 
 
@@ -49,7 +46,7 @@ async function addProducts(tab, num) {
     }
 
 
-/*Récupération des données & Ajout des produits*/
+/*Fonction récupération des données & Ajout des produits*/
 async function getProducts() {
     await fetch("http://localhost:3000/api/products")
         .then(function(res) { // Récupération des données de l'API
@@ -61,7 +58,8 @@ async function getProducts() {
             console.table(products);
             var nbProducts=products.length;
             for(var i = 0; i < nbProducts; i++) {
-                addElements(products, i);
+                addElements(i);
+                addProducts(products, i);
             }
         })
         .catch(function(error) { // Affichage si besoin du message d'erreur de la requête

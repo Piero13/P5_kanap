@@ -34,9 +34,6 @@ async function addElements(tab) {
         colorsSelect.appendChild(newOption);
         newOption.setAttribute("id", "color" + i );
     }
-
-    // Intégration des détails du produit aux éléments
-    await addProduct(tab);
 }
 
 
@@ -80,6 +77,7 @@ async function getProduct() {
         .then(function(searchResult) { // Intégration des données
             console.table(searchResult);
             addElements(searchResult);
+            addProduct(searchResult);
         })
 
         .catch(function(err) { // En cas d'erreur de la requête
@@ -111,7 +109,7 @@ function confirmation() {
 }
 
 
-/*Fonction Importation dans le localStorage*/
+/*Fonction Exportation dans le localStorage*/
 function pushToCart(cartProducts) {
     localStorage.setItem("cart", JSON.stringify(cartProducts));
     console.table(cartProducts);
@@ -142,7 +140,7 @@ function addToCart(productToPush) {
         }                                       
 
     } else { // Si le panier est vide
-        cartProducts=[];
+        cartProducts = [];
         cartProducts.push(productToPush);
         pushToCart(cartProducts);
     }

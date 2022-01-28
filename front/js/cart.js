@@ -301,7 +301,7 @@ function formValidation() {
 	} else {
 		emailInput.nextElementSibling.innerText = "";
 	}
-    console.log(validForm)
+    console.log(validForm);
 
 	return validForm;
 }
@@ -311,53 +311,59 @@ function formValidation() {
 btnOrder.addEventListener('click', function(event) {
     event.preventDefault();
 
-    if(formValidation()) {
-        // Récupération des id des produits du panier
-        let idproductsOrder = [];
+    if(cartProducts != null && cartProducts != "") { // Si le panier n'est pas vide
 
-        for(i = 0; i < cartProducts.length; i++) {
-            idproductsOrder.push(cartProducts[i].productId);
-        }
+        if(formValidation()) { // Si le formulaire est validé
+            // Récupération des id des produits du panier
+            let idproductsOrder = [];
 
-        // Création du tableau récapitulatif de commande
-        const order = {
-            contact: {
-                firstName: firstNameInput.value,
-                lastName: lastNameInput.value,
-                address: addressInput.value,
-                city: cityInput.value,
-                email: emailInput.value
-            },
-            products: idproductsOrder
-        }
-        
-        console.log(typeof order);
-        
-        // Création des options de la requête à l'API
-        const postOptions = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(order)
-        }
-
-        // Envoi des données à l'API et récupération du numéro de commande
-        fetch("http://localhost:3000/api/products/order", postOptions)
-        .then(function(res) { // Récupération de la réponse de la requête
-            if(res.ok) {
-                return res.json();
-            } else {
-                console.error(res.status);
+            for(i = 0; i < cartProducts.length; i++) {
+                idproductsOrder.push(cartProducts[i].productId);
             }
-        })
-        .then(function(resData) { // Récupération du numéro de commande et ouverture de la page confirmation
-            console.log(resData.orderId);
-            window.location.replace("../html/confirmation.html?orderId=" + resData.orderId);
-        })
-        .catch(function(err) { // Message en cas d'erreur de la requête
-            alert("Erreur : " + err);
-        })
+
+            // Création du tableau récapitulatif de commande
+            const order = {
+                contact: {
+                    firstName: firstNameInput.value,
+                    lastName: lastNameInput.value,
+                    address: addressInput.value,
+                    city: cityInput.value,
+                    email: emailInput.value
+                },
+                products: idproductsOrder
+            }
+            
+            console.log(typeof order);
+            
+            // Création des options de la requête à l'API
+            const postOptions = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(order)
+            }
+
+            // Envoi des données à l'API et récupération du numéro de commande
+            fetch("http://localhost:3000/api/products/order", postOptions)
+            .then(function(res) { // Récupération de la réponse de la requête
+                if(res.ok) {
+                    return res.json();
+                } else {
+                    console.error(res.status);
+                }
+            })
+            .then(function(resData) { // Récupération du numéro de commande et ouverture de la page confirmation
+                console.log(resData.orderId);
+                window.location.replace("../html/confirmation.html?orderId=" + resData.orderId);
+            })
+            .catch(function(err) { // Message en cas d'erreur de la requête
+                alert("Erreur : " + err);
+            })
+        }
+
+    } else { // Si le panier est vide
+        alert("Votre panier est vide");
     }
 })
