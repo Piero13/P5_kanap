@@ -301,16 +301,33 @@ function formValidation() {
 	} else {
 		emailInput.nextElementSibling.innerText = "";
 	}
-    console.log(validForm);
 
 	return validForm;
 }
 
 
-/*Validation au clic sur le bouton commander*/
-btnOrder.addEventListener('click', function(event) {
-    event.preventDefault();
+/*Fonction envoi des données à l'API et récupération du numéro de commande*/
+async function postCart(postOptions) {
+    await fetch("http://localhost:3000/api/products/order", postOptions)
+    .then(function(res) { // Récupération de la réponse de la requête
+        if(res.ok) {
+            return res.json();
+        } else {
+            console.error(res.status);
+        }
+    })
+    .then(function(resData) { // Récupération du numéro de commande et ouverture de la page confirmation
+        console.log(resData.orderId);
+        window.location.replace("../html/confirmation.html?orderId=" + resData.orderId);
+    })
+    .catch(function(err) { // Message en cas d'erreur de la requête
+        alert("Erreur : " + err);
+    })
+}
 
+
+/*Fonction validation du panier*/
+function cartValidation() {
     if(cartProducts != null && cartProducts != "") { // Si le panier n'est pas vide
 
         if(formValidation()) { // Si le formulaire est validé
@@ -333,8 +350,6 @@ btnOrder.addEventListener('click', function(event) {
                 products: idproductsOrder
             }
             
-            console.log(typeof order);
-            
             // Création des options de la requête à l'API
             const postOptions = {
                 method: 'POST',
@@ -344,26 +359,16 @@ btnOrder.addEventListener('click', function(event) {
                 },
                 body: JSON.stringify(order)
             }
-
-            // Envoi des données à l'API et récupération du numéro de commande
-            fetch("http://localhost:3000/api/products/order", postOptions)
-            .then(function(res) { // Récupération de la réponse de la requête
-                if(res.ok) {
-                    return res.json();
-                } else {
-                    console.error(res.status);
-                }
-            })
-            .then(function(resData) { // Récupération du numéro de commande et ouverture de la page confirmation
-                console.log(resData.orderId);
-                window.location.replace("../html/confirmation.html?orderId=" + resData.orderId);
-            })
-            .catch(function(err) { // Message en cas d'erreur de la requête
-                alert("Erreur : " + err);
-            })
+            postCart(postOptions);
         }
-
+        
     } else { // Si le panier est vide
         alert("Votre panier est vide");
     }
+}
+
+/*Envoi de la commande*/
+btnOrder.addEventListener('click', function(event) {
+    event.preventDefault();
+    cartValidation();
 })

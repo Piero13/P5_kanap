@@ -101,10 +101,7 @@ const artName = document.getElementById("title");
 /*Fonction affichage de confirmation de l'ajout au panier*/
 function confirmation() {
     if(window.confirm("Article ajouté au panier!\n\nVoir le panier [OK]\nContinuer vos achats [Annuler]")) {
-        window.open("../html/cart.html", "_self");
-
-    } else {
-        window.location.replace("../html/index.html");
+        window.location.replace("../html/cart.html");
     }
 }
 
