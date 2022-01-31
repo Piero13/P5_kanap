@@ -125,12 +125,17 @@ function qtyModify() {
 
             let newQty = parseInt(elementsToModify[j].value);
 
-            cartProducts[j].productQty = newQty;
-            console.log(cartProducts);
+            if(newQty > 0 && newQty <= 100) {
+                cartProducts[j].productQty = newQty;
+                console.log(cartProducts);
 
-            localStorage.setItem("cart", JSON.stringify(cartProducts));
+                localStorage.setItem("cart", JSON.stringify(cartProducts));
 
-            location.reload();
+                location.reload();
+            } else {
+                alert("La quantité ne peut être comprise qu'entre 1 et 100");
+                location.reload();
+            }
         })
     }
 }
