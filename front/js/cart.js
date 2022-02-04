@@ -195,7 +195,7 @@ if(cartProducts === null || cartProducts == "") {
             if(res.ok) {
             return res.json();
         }
-        })
+    })
 
         .then(function(searchResult) { // Récupération des options produit dans l'API
             addedProductOptions = {
@@ -371,6 +371,7 @@ function cartValidation() {
         alert("Votre panier est vide");
     }
 }
+
 
 /*Envoi de la commande*/
 btnOrder.addEventListener('click', function(event) {
